@@ -35,6 +35,7 @@ function nav(id) {
   if (target) {
     target.classList.add('active');
     target.parentElement.scrollTop = 0;
+    window.scrollTo(0, 0);
   }
   if (id === 'GROUP_PICKER') {
     document.getElementById('group-picker-back').style.visibility = hasEnteredGroup ? 'visible' : 'hidden';
