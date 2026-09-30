@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NomNom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+
+<div class="hint" id="hint"></div>
+
+<div class="phone"><div class="frame" id="frame">
+
+<div class="screen active" data-id="LOGIN">
+  <div class="hero-top" style="border-radius:0 0 20px 20px;padding:32px 20px 44px;text-align:center;">
+    <div style="width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+      <i data-lucide="chef-hat" style="width:28px;height:28px;color:#fff;"></i>
+    </div>
+    <div class="hero-brand" style="font-size:22px;">NomNom</div>
+    <p class="hero-sub" style="margin-top:4px;">Rủ đồng nghiệp đi ăn, đi uống dễ dàng hơn</p>
+  </div>
+  <div class="content content-lift">
+    <div class="card" style="text-align:center;padding:20px 16px;">
+      <h3 style="font-size:18px;">Chào bạn</h3>
+      <p class="meta">Đăng nhập để bắt đầu rủ rê đồng nghiệp</p>
+    </div>
+    <p class="field-label">Tên đăng nhập</p>
+    <input class="field" id="login-username" placeholder="VD: huongle" />
+    <p class="field-label">Mật khẩu</p>
+    <input class="field" id="login-password" type="password" placeholder="Nhập mật khẩu" />
+    <button class="btn btn-primary" onclick="doLogin()">Đăng nhập</button>
+    <p class="meta" style="text-align:center;cursor:pointer;text-decoration:underline;" onclick="nav('REGISTER')">Chưa có tài khoản? Tạo tài khoản mới</p>
+  </div>
+</div>
+
+<div class="screen" data-id="REGISTER">
+  <div class="topbar"><button class="back" onclick="nav('LOGIN')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Tạo tài khoản</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <p class="field-label">Tên đăng nhập</p>
+    <input class="field" id="reg-username" placeholder="VD: huongle" />
+    <p class="field-label">Tên hiển thị</p>
+    <input class="field" id="reg-display" placeholder="VD: Huong Le" />
+    <p class="field-label">Mật khẩu</p>
+    <input class="field" id="reg-password" type="password" placeholder="Nhập mật khẩu" />
+    <button class="btn btn-primary" onclick="doRegister()">Tạo tài khoản</button>
+  </div>
+</div>
+
+<div class="screen" data-id="GROUP_PICKER">
+  <div class="topbar"><button class="back" id="group-picker-back" style="visibility:hidden;" onclick="nav('EVENT_LIST')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Chọn nhóm</div><span style="width:34px;"></span></div>
+  <div class="content">
+    <p class="meta" style="margin-bottom:14px;" id="group-picker-hint">Bạn đang tham gia nhiều nhóm, chọn 1 nhóm để tiếp tục nhé.</p>
+    <div id="group-list"></div>
+    <button class="btn btn-outline" onclick="nav('CREATE_GROUP')">+ Tạo nhóm mới</button>
+    <p class="field-label" style="margin-top:16px;">Có mã mời từ đồng nghiệp?</p>
+    <div class="row" style="gap:8px;">
+      <input class="field" id="join-code-input" style="margin-bottom:0;" placeholder="Nhập mã mời..." />
+      <button class="btn btn-teal btn-sm" onclick="doJoinByCode()">Tham gia</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" data-id="GROUP_MEMBERS">
+  <div class="topbar"><button class="back" onclick="nav('GROUP_PICKER')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;" id="members-group-title">Thành viên nhóm</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <div class="card card-tint-coral" style="text-align:center;">
+      <div class="icon-chip coral" style="margin:0 auto;"><i data-lucide="link" style="width:22px;height:22px;color:var(--coral-dark);"></i></div>
+      <p class="meta" style="margin-top:10px;">Gửi mã mời này cho đồng nghiệp, họ nhập vào màn "Chọn nhóm" để tham gia</p>
+      <div class="row" style="gap:8px;margin-top:10px;">
+        <input class="field" id="group-invite-code" style="margin-bottom:0;font-size:14px;text-align:center;font-weight:700;" readonly />
+        <button class="btn btn-primary btn-sm" onclick="copyInviteCode()">Sao chép</button>
+      </div>
+    </div>
+    <p class="section-title">Thành viên hiện tại</p>
+    <div id="members-list"></div>
+  </div>
+</div>
+
+<div class="screen" data-id="CREATE_GROUP">
+  <div class="topbar"><button class="back" onclick="nav('GROUP_PICKER')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Tạo nhóm mới</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <p class="field-label">Tên nhóm</p>
+    <input class="field" id="new-group-name" placeholder="VD: Team Product" />
+    <p class="field-label">Mô tả</p>
+    <input class="field" id="new-group-desc" placeholder="VD: Nhóm rủ ăn của team Product" />
+    <button class="btn btn-primary" onclick="createGroup()">Tạo nhóm</button>
+  </div>
+</div>
+
+<div class="screen" data-id="EVENT_LIST">
+  <div class="hero-top">
+    <div class="hero-row">
+      <div>
+        <div class="hero-brand" id="greeting-name">Chào bạn</div>
+        <p class="hero-sub" onclick="nav('GROUP_PICKER')" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;" id="current-group-label">Chọn nhóm <i data-lucide="chevron-down" style="width:12px;height:12px;"></i></p>
+      </div>
+      <div class="avatar-btn" onclick="nav('PROFILE')"><i data-lucide="user" style="width:18px;height:18px;color:#fff;"></i></div>
+    </div>
+  </div>
+  <div class="content content-lift">
+    <div class="card card-tap" style="cursor:pointer;" onclick="nav('CREATE_EVENT')">
+      <div class="row between">
+        <div><h3>Tạo lời rủ mới</h3><p class="meta">Bấm để rủ đồng nghiệp đi ăn</p></div>
+        <div class="icon-chip coral"><i data-lucide="plus" style="width:22px;height:22px;color:var(--coral-dark);"></i></div>
+      </div>
+    </div>
+    <div id="event-list-items"></div>
+  </div>
+  <button class="fab" onclick="openSuggest()">
+    <i data-lucide="chef-hat" style="width:22px;height:22px;color:#fff;"></i>
+  </button>
+  <div class="navbar">
+    <button class="navitem active" onclick="nav('EVENT_LIST')"><i data-lucide="utensils" style="width:20px;height:20px;"></i>Lời rủ</button>
+    <button class="navitem" onclick="openPlaceList()"><i data-lucide="map-pin" style="width:20px;height:20px;"></i>Quán</button>
+    <button class="navitem" onclick="nav('PROFILE')"><i data-lucide="user" style="width:20px;height:20px;"></i>Cá nhân</button>
+  </div>
+</div>
+
+<div class="screen" data-id="CREATE_EVENT">
+  <div class="topbar"><button class="back" onclick="nav('EVENT_LIST')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Tạo lời rủ mới</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <p class="field-label">Đi ăn gì đây?</p>
+    <div class="type-pill-row" id="type-pills">
+      <div class="type-pill active" onclick="selectEventType(this,'out')"><i data-lucide="utensils" style="width:22px;height:22px;"></i><span>Ăn ngoài</span></div>
+      <div class="type-pill" onclick="selectEventType(this,'order')"><i data-lucide="shopping-bag" style="width:22px;height:22px;"></i><span>Order</span></div>
+    </div>
+    <p class="field-label">Tên quán / hoạt động</p>
+    <input class="field" id="event-title" placeholder="VD: Cơm tấm Bà Ba" />
+    <div id="field-time">
+      <p class="field-label">Thời gian</p>
+      <input class="field" id="event-time" type="datetime-local" />
+    </div>
+    <div id="field-location">
+      <p class="field-label">Địa điểm</p>
+      <input class="field" id="event-address" placeholder="Để trống nếu chưa chốt" />
+      <p class="field-label">Link định vị</p>
+      <input class="field" id="event-maplink" placeholder="Dán link Google Maps..." />
+    </div>
+    <div id="field-orderlink" style="display:none;">
+      <p class="field-label">Link order chung</p>
+      <input class="field" id="event-orderlink" placeholder="Dán link đặt đơn nhóm..." />
+    </div>
+    <p class="field-label">Ghi chú</p>
+    <input class="field" id="event-note" placeholder="VD: quán quen, có ship được không..." />
+    <button class="btn btn-primary" onclick="submitCreateEvent()">Đăng lời rủ</button>
+  </div>
+</div>
+
+<div class="screen" data-id="EVENT_DETAIL">
+  <div class="topbar"><button class="back" onclick="backToEventList()"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;" id="detail-title">Chi tiết lời rủ</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <div class="card card-tint-teal" id="detail-order-card" style="text-align:center;display:none;">
+      <div class="icon-chip teal" style="margin:0 auto;"><i data-lucide="receipt" style="width:24px;height:24px;color:var(--teal-dark);"></i></div>
+      <p class="meta" style="margin-top:10px;">Link order chung</p>
+      <a href="#" id="detail-order-link" target="_blank" style="color:var(--teal-dark);font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:4px;">Mở link order <i data-lucide="external-link" style="width:14px;height:14px;"></i></a>
+    </div>
+    <div class="card card-tint-coral" id="detail-location-card" style="display:none;text-align:center;">
+      <div class="icon-chip coral" style="margin:0 auto;"><i data-lucide="map-pin" style="width:24px;height:24px;color:var(--coral-dark);"></i></div>
+      <h3 style="margin-top:10px;font-size:15px;" id="detail-place-name">-</h3>
+      <p class="meta" id="detail-place-address">Địa chỉ chưa chốt</p>
+      <a href="#" id="detail-map-link" target="_blank" style="color:var(--coral-dark);font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:4px;">Xem trên Google Maps <i data-lucide="external-link" style="width:14px;height:14px;"></i></a>
+    </div>
+    <div class="card">
+      <h3 id="detail-participants-title">Ai tham gia (0)</h3>
+      <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap;" id="detail-participants-list"></div>
+      <button class="btn btn-outline btn-sm" style="margin-top:10px;" id="detail-join-btn" onclick="joinCurrentEvent()">Tham gia</button>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:10px;">Tổng hợp chi phí</h3>
+      <div id="bill-list"></div>
+      <div class="bill-row" style="border-bottom:none;font-weight:700;padding-top:12px;"><span>Tổng cộng</span><span id="bill-total">0đ</span></div>
+    </div>
+    <button class="btn btn-teal" onclick="nav('BILL_EDIT')">+ Thêm món / chỉnh chi phí</button>
+    <button class="btn btn-primary" id="detail-done-btn" onclick="markEventDone()">Đánh dấu đã ăn xong</button>
+  </div>
+</div>
+
+<div class="screen" data-id="BILL_EDIT">
+  <div class="topbar"><button class="back" onclick="nav('EVENT_DETAIL')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Chỉnh chi phí</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <p class="meta" style="margin-bottom:14px;">Nhập tên người, món đã order và giá tiền. Link sharebill Grab chỉ để tham khảo, số tiền vẫn cần nhập tay.</p>
+    <div id="bill-edit-rows"></div>
+    <button class="btn btn-outline" onclick="addBillRow()">+ Thêm dòng</button>
+    <button class="btn btn-primary" onclick="saveBill()">Lưu chi phí</button>
+  </div>
+</div>
+
+<div class="screen" data-id="VOTE">
+  <div class="topbar"><button class="back" onclick="nav('EVENT_DETAIL')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Ăn xong rồi, chấm điểm nào</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <div class="card card-tint-coral" style="text-align:center;">
+      <h3 id="vote-title">-</h3>
+      <p class="meta">Quán này ngon không? Vote cho mọi người biết nhé</p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14px;margin-bottom:10px;" id="vote-me-label">Bạn</h3>
+      <div class="row" style="gap:6px;font-size:26px;color:var(--line);" id="star-row">
+        <span class="star" onclick="rate(1)">★</span><span class="star" onclick="rate(2)">★</span><span class="star" onclick="rate(3)">★</span><span class="star" onclick="rate(4)">★</span><span class="star" onclick="rate(5)">★</span>
+      </div>
+      <button class="btn btn-danger-outline" id="blacklist-btn" style="display:none;margin-top:12px;" onclick="toggleBlacklist()"><span style="display:inline-flex;align-items:center;gap:6px;justify-content:center;width:100%;"><i data-lucide="ban" style="width:16px;height:16px;"></i>Thêm vào blacklist (cá nhân)</span></button>
+      <p class="meta" id="blacklist-hint" style="display:none;margin-top:6px;">Quán này sẽ bị ẩn khỏi gợi ý món của riêng bạn. Người khác không bị ảnh hưởng, và bạn có thể gỡ lại trong trang cá nhân bất cứ lúc nào.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:10px;">Mọi người đã vote</h3>
+      <div id="vote-others-list"></div>
+    </div>
+    <button class="btn btn-primary" onclick="submitVote()">Gửi đánh giá</button>
+  </div>
+</div>
+
+<div class="screen" data-id="PLACE_LIST">
+  <div class="hero-top" style="padding-bottom:20px;">
+    <div class="hero-row">
+      <div>
+        <div class="hero-brand" style="font-size:20px;">Gợi ý quán</div>
+        <p class="hero-sub">Nơi anh em đã ăn và đánh giá</p>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div id="place-list-items"></div>
+    <p class="meta" id="place-list-empty" style="display:none;text-align:center;padding:24px 0;">Chưa có quán nào — tạo lời rủ đầu tiên để bắt đầu nhé.</p>
+  </div>
+  <button class="fab" onclick="openSuggest()">
+    <i data-lucide="chef-hat" style="width:22px;height:22px;color:#fff;"></i>
+  </button>
+  <div class="navbar">
+    <button class="navitem" onclick="nav('EVENT_LIST')"><i data-lucide="utensils" style="width:20px;height:20px;"></i>Lời rủ</button>
+    <button class="navitem active" onclick="openPlaceList()"><i data-lucide="map-pin" style="width:20px;height:20px;"></i>Quán</button>
+    <button class="navitem" onclick="nav('PROFILE')"><i data-lucide="user" style="width:20px;height:20px;"></i>Cá nhân</button>
+  </div>
+</div>
+
+<div class="screen" data-id="PROFILE">
+  <div class="hero-top" style="text-align:center;padding-bottom:52px;">
+    <div style="width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,0.22);border:2.5px solid rgba(255,255,255,0.55);display:flex;align-items:center;justify-content:center;margin:0 auto;">
+      <i data-lucide="user-round" style="width:32px;height:32px;color:#fff;"></i>
+    </div>
+    <h3 style="margin-top:10px;color:#fff;font-family:'Baloo 2',sans-serif;font-size:18px;" id="profile-name">-</h3>
+    <p style="color:rgba(255,255,255,0.85);font-size:12.5px;margin:0;" id="profile-username">@-</p>
+  </div>
+  <div class="content content-lift">
+    <div class="card" style="display:flex;gap:0;padding:0;overflow:hidden;">
+      <div style="flex:1;text-align:center;padding:16px;border-right:1px solid var(--line);"><h3 style="font-size:20px;" id="profile-eat-count">0</h3><p class="meta">Lần đi ăn</p></div>
+      <div style="flex:1;text-align:center;padding:16px;"><h3 style="font-size:20px;" id="profile-fav-count">0</h3><p class="meta">Quán yêu thích</p></div>
+    </div>
+    <div class="row between" style="margin-top:18px;margin-bottom:10px;">
+      <p class="section-title" style="margin:0;">Lịch sử gần đây</p>
+      <a href="javascript:void(0)" onclick="nav('HISTORY_ALL')" style="font-size:12.5px;font-weight:700;color:var(--coral-dark);text-decoration:none;">Xem tất cả</a>
+    </div>
+    <div id="history-recent"></div>
+    <button class="btn btn-outline" onclick="doLogout()">Đăng xuất</button>
+  </div>
+  <button class="fab" onclick="openSuggest()">
+    <i data-lucide="chef-hat" style="width:22px;height:22px;color:#fff;"></i>
+  </button>
+  <div class="navbar">
+    <button class="navitem" onclick="nav('EVENT_LIST')"><i data-lucide="utensils" style="width:20px;height:20px;"></i>Lời rủ</button>
+    <button class="navitem" onclick="openPlaceList()"><i data-lucide="map-pin" style="width:20px;height:20px;"></i>Quán</button>
+    <button class="navitem active" onclick="nav('PROFILE')"><i data-lucide="user" style="width:20px;height:20px;"></i>Cá nhân</button>
+  </div>
+</div>
+
+<div class="screen" data-id="HISTORY_ALL">
+  <div class="topbar"><button class="back" onclick="nav('PROFILE')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Lịch sử của bạn</div><span style="width:20px;"></span></div>
+  <div class="content" id="history-all-list"></div>
+</div>
+
+<div class="screen" data-id="SUGGEST_2">
+  <div class="topbar"><button class="back" onclick="nav('EVENT_LIST')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Đầu bếp gợi ý cho bạn</div><span style="width:20px;"></span></div>
+  <div class="content" id="suggest-result">
+    <p class="meta">Đang chọn món...</p>
+  </div>
+</div>
+
+</div></div>
+
+<script src="/js/api.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>

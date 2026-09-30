@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NomNom — Interactive Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+  :root{
+    --page:#F3E9DC;
+    --cream:#FFFBF5;
+    --paper:#FFFFFF;
+    --coral:#FF7A55;
+    --coral2:#FF9F6B;
+    --coral-dark:#D9502E;
+    --teal:#2FB6A6;
+    --teal2:#5FD1C0;
+    --teal-dark:#1F7C70;
+    --amber:#FFB238;
+    --amber2:#FFCB6B;
+    --amber-dark:#9A6303;
+    --ink:#2B2320;
+    --ink-soft:#8C7F77;
+    --ink-faint:#BEB2A9;
+    --line:#F0E5D8;
+    --danger:#D9483F;
+    --danger-bg:#FBE7E5;
+    --radius-card:18px;
+    --radius-ctl:13px;
+    --grad-coral:linear-gradient(135deg, var(--coral2), var(--coral));
+    --grad-teal:linear-gradient(135deg, var(--teal2), var(--teal));
+    --grad-hero:linear-gradient(135deg, var(--coral2), var(--coral));
+    --shadow-card:0 1px 2px rgba(43,35,32,0.04), 0 6px 16px rgba(43,35,32,0.06);
+    --shadow-coral:0 10px 20px -6px rgba(217,80,46,0.45);
+    --shadow-teal:0 10px 20px -6px rgba(31,124,112,0.4);
+    --shadow-fab:0 10px 22px -4px rgba(154,99,3,0.5);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Be Vietnam Pro', -apple-system, 'Segoe UI', sans-serif;
+    background:var(--page);
+    background-image:radial-gradient(circle at 15% 8%, rgba(255,154,101,0.16), transparent 45%), radial-gradient(circle at 85% 92%, rgba(63,184,168,0.14), transparent 45%);
+    color:var(--ink);
+    padding:32px 16px;
+    display:flex;
+    justify-content:center;
+    -webkit-font-smoothing:antialiased;
+  }
+  .phone{
+    width:380px;
+    background:var(--ink);
+    border-radius:38px;
+    padding:10px;
+    box-shadow:0 30px 60px rgba(43,35,32,0.28);
+  }
+  .frame{
+    background:var(--cream);
+    border-radius:29px;
+    overflow:hidden;
+    height:700px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
+  .screen{display:none;flex-direction:column;height:100%;min-height:0;opacity:0;}
+  .screen.active{display:flex;animation:screenIn .28s cubic-bezier(.2,.8,.3,1) forwards;}
+  @keyframes screenIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .fab{
+    position:absolute;right:20px;bottom:88px;width:52px;height:52px;
+    border-radius:50%;background:var(--ink);
+    box-shadow:0 6px 16px rgba(43,35,32,0.3);
+    display:flex;align-items:center;justify-content:center;z-index:5;
+    cursor:pointer;border:none;
+    transition:transform .12s ease;
+  }
+  .fab:active{transform:scale(0.92);}
+  .hero-top{
+    padding:20px 20px 40px;
+    background:var(--grad-hero);
+    position:relative;
+    flex-shrink:0;
+    border-radius:0 0 20px 20px;
+  }
+  .hero-row{display:flex;align-items:center;justify-content:space-between;}
+  .hero-brand{font-family:'Baloo 2',sans-serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:-0.01em;}
+  .hero-sub{color:rgba(255,255,255,0.88);font-size:12.5px;margin:2px 0 0;font-weight:500;}
+  .avatar-btn{
+    width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.22);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    border:2px solid rgba(255,255,255,0.5);
+  }
+  .topbar{
+    padding:20px 20px 16px;
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--cream);
+    flex-shrink:0;
+  }
+  .brand{font-family:'Baloo 2',sans-serif;font-size:20px;font-weight:700;color:var(--coral-dark);letter-spacing:-0.01em;}
+  .back{
+    font-size:18px;width:34px;height:34px;border-radius:50%;
+    background:var(--paper);border:none;cursor:pointer;color:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 6px rgba(43,35,32,0.1);
+    transition:transform .12s ease;
+  }
+  .back:active{transform:scale(0.9);}
+  .content{flex:1;padding:4px 20px 20px;overflow-y:auto;}
+  .content-lift{margin-top:-28px;position:relative;z-index:2;}
+  .card{
+    background:var(--paper);
+    border-radius:var(--radius-card);
+    padding:16px;
+    margin-bottom:12px;
+    box-shadow:var(--shadow-card);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .card-tap:active{transform:scale(0.98);}
+  .card-tint{background:var(--cream);box-shadow:none;border:1px solid var(--line);}
+  .card-tint-coral{background:#FFF1EA;box-shadow:none;border:1px solid #FBDCCB;}
+  .card-tint-teal{background:#E9F7F4;box-shadow:none;border:1px solid #CDEBE4;}
+  .icon-chip{
+    width:52px;height:52px;border-radius:16px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .icon-chip.coral{background:linear-gradient(150deg,#FFE0CF,#FFCCB0);}
+  .icon-chip.teal{background:linear-gradient(150deg,#D3F1EA,#B7E7DC);}
+  .icon-chip.amber{background:linear-gradient(150deg,#FFEBC2,#FFDD9B);}
+  .btn{
+    display:block;width:100%;text-align:center;
+    padding:14px;border-radius:var(--radius-ctl);border:none;
+    font-size:14.5px;font-weight:700;cursor:pointer;margin-bottom:10px;
+    transition:transform .12s cubic-bezier(.3,1.5,.4,1), box-shadow .12s ease;
+    letter-spacing:-0.005em;
+    font-family:'Be Vietnam Pro',sans-serif;
+  }
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--grad-coral);color:#fff;box-shadow:var(--shadow-coral);}
+  .btn-teal{background:var(--grad-teal);color:#fff;box-shadow:var(--shadow-teal);}
+  .btn-outline{background:var(--paper);border:1.5px solid var(--line);color:var(--ink);}
+  .btn-danger-outline{background:var(--paper);border:1.5px solid #F0C2BE;color:var(--danger);}
+  .btn:disabled{opacity:0.55;cursor:not-allowed;transform:none;box-shadow:none;}
+  .btn-sm{width:auto;padding:9px 18px;margin:0;font-size:13.5px;}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:5px 11px;border-radius:20px;background:#FFEAE0;color:var(--coral-dark);letter-spacing:0.01em;}
+  .tag.teal{background:#E3F5F1;color:var(--teal-dark);}
+  .tag.amber{background:#FFF1D6;color:var(--amber-dark);}
+  .tag.solid{background:var(--coral-dark);color:#fff;}
+  .row{display:flex;align-items:center;gap:10px;}
+  .between{justify-content:space-between;}
+  h3{margin:0 0 3px;font-size:15.5px;font-weight:700;letter-spacing:-0.01em;font-family:'Be Vietnam Pro',sans-serif;}
+  p.meta{margin:0;font-size:12.5px;color:var(--ink-soft);line-height:1.5;}
+  .section-title{font-size:13px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.04em;margin:18px 0 10px;}
+  .field{
+    width:100%;border:1.5px solid var(--line);border-radius:var(--radius-ctl);
+    padding:12px 14px;font-size:14px;margin-bottom:12px;
+    background:var(--paper);color:var(--ink);
+    transition:border-color .15s ease, box-shadow .15s ease;
+    font-family:'Be Vietnam Pro',sans-serif;
+  }
+  .field:focus{outline:none;border-color:var(--coral);box-shadow:0 0 0 3px rgba(255,122,85,0.15);}
+  .field-label{font-size:13px;font-weight:600;margin:0 0 6px;color:var(--ink-soft);}
+  .type-pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+  .type-pill{
+    border:1.5px solid var(--line);border-radius:var(--radius-ctl);padding:10px 12px;
+    display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;
+    background:var(--paper);transition:border-color .15s ease, background .15s ease, transform .12s ease;
+  }
+  .type-pill:active{transform:scale(0.95);}
+  .type-pill{color:var(--ink-soft);}
+  .type-pill.active{border-color:transparent;background:var(--grad-coral);box-shadow:var(--shadow-coral);color:#fff;}
+  .type-pill.active span{color:#fff;}
+  .type-pill span{font-size:12px;font-weight:600;color:var(--ink);}
+  .avatar-stack{display:flex;}
+  .avatar-stack .dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--paper);margin-left:-8px;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#fff;}
+  .avatar-stack .dot:first-child{margin-left:0;}
+  .navbar{
+    display:flex;padding:10px 14px calc(12px + env(safe-area-inset-bottom, 0px));
+    background:var(--paper);flex-shrink:0;gap:4px;
+    box-shadow:0 -1px 0 var(--line);
+  }
+  .navitem{
+    flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--ink-faint);
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    background:none;border:none;cursor:pointer;padding:7px 0;border-radius:14px;
+    transition:color .15s ease, background .15s ease, transform .12s ease;
+  }
+  .navitem:active{transform:scale(0.92);}
+  .navitem.active{color:var(--coral-dark);background:#FFEAE0;}
+  .bill-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px;}
+  .bill-row:last-child{border-bottom:none;}
+  .bill-row span:first-child{color:var(--ink-soft);}
+  .bill-row span:last-child{font-weight:600;white-space:nowrap;}
+  .star{cursor:pointer;transition:transform .15s cubic-bezier(.3,1.6,.4,1);}
+  .star:active{transform:scale(1.25) rotate(-8deg);}
+  .hint{
+    position:fixed;top:18px;left:50%;transform:translateX(-50%);
+    background:var(--ink);color:#fff;padding:9px 18px;border-radius:24px;
+    font-size:13px;font-weight:500;opacity:0;transition:opacity .25s ease;
+    pointer-events:none;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,0.2);
+  }
+  .hint.show{opacity:0.95;}
+</style>
+</head>
+<body>
+
+<div class="hint" id="hint"></div>
+
+<div class="phone"><div class="frame" id="frame">
+
+<div class="screen active" data-id="LOGIN">
+  <div class="hero-top" style="border-radius:0 0 20px 20px;padding:32px 20px 44px;text-align:center;">
+    <div style="width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+      <i data-lucide="chef-hat" style="width:28px;height:28px;color:#fff;"></i>
+    </div>
+    <div class="hero-brand" style="font-size:22px;">NomNom</div>
+    <p class="hero-sub" style="margin-top:4px;">Rủ đồng nghiệp đi ăn, đi uống dễ dàng hơn</p>
+  </div>
+  <div class="content content-lift">
+    <div class="card" style="text-align:center;padding:20px 16px;">
+      <h3 style="font-size:18px;">Chào bạn</h3>
+      <p class="meta">Đăng nhập để bắt đầu rủ rê đồng nghiệp</p>
+    </div>
+    <p class="field-label">Tên đăng nhập</p>
+    <input class="field" id="login-name" placeholder="VD: huongle" value="huongle" />
+    <p class="field-label">Mật khẩu</p>
+    <input class="field" type="password" placeholder="Nhập mật khẩu" value="••••••••" />
+    <button class="btn btn-primary" onclick="enterApp()">Vào NomNom</button>
+    <p class="meta" style="text-align:center;cursor:pointer;text-decoration:underline;" onclick="toggleDemoGroups()" id="demo-group-toggle">Demo: tài khoản này có 2 nhóm (bấm để đổi thành 1 nhóm)</p>
+  </div>
+</div>
+
+<div class="screen" data-id="GROUP_PICKER">
+  <div class="topbar"><button class="back" id="group-picker-back" style="visibility:hidden;" onclick="nav('EVENT_LIST')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Chọn nhóm</div><span style="width:34px;"></span></div>
+  <div class="content">
+    <p class="meta" style="margin-bottom:14px;">Bạn đang tham gia nhiều nhóm, chọn 1 nhóm để tiếp tục nhé.</p>
+    <div class="card">
+      <div class="row" style="gap:12px;">
+        <div class="icon-chip coral" style="cursor:pointer;" onclick="enterGroup('Team Sales')"><i data-lucide="users" style="width:22px;height:22px;color:var(--coral-dark);"></i></div>
+        <div style="flex:1;cursor:pointer;" onclick="enterGroup('Team Sales')"><h3>Team Sales</h3><p class="meta">12 thành viên</p></div>
+        <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openGroupMembers('Team Sales')">Mời</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="row" style="gap:12px;">
+        <div class="icon-chip teal" style="cursor:pointer;" onclick="enterGroup('Team Marketing')"><i data-lucide="users" style="width:22px;height:22px;color:var(--teal-dark);"></i></div>
+        <div style="flex:1;cursor:pointer;" onclick="enterGroup('Team Marketing')"><h3>Team Marketing</h3><p class="meta">7 thành viên</p></div>
+        <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openGroupMembers('Team Marketing')">Mời</button>
+      </div>
+    </div>
+    <button class="btn btn-outline" onclick="nav('CREATE_GROUP')">+ Tạo nhóm mới</button>
+  </div>
+</div>
+
+<div class="screen" data-id="GROUP_MEMBERS">
+  <div class="topbar"><button class="back" onclick="nav('GROUP_PICKER')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;" id="members-group-title">Thành viên nhóm</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <div class="card card-tint-coral" style="text-align:center;">
+      <div class="icon-chip coral" style="margin:0 auto;"><i data-lucide="link" style="width:22px;height:22px;color:var(--coral-dark);"></i></div>
+      <p class="meta" style="margin-top:10px;">Gửi link này cho đồng nghiệp để họ tự tham gia nhóm</p>
+      <div class="row" style="gap:8px;margin-top:10px;">
+        <input class="field" id="group-invite-link" style="margin-bottom:0;font-size:12.5px;" readonly value="https://nomnom.app/join/team-sales-x7k2" />
+        <button class="btn btn-primary btn-sm" onclick="copyInviteLink()">Sao chép</button>
+      </div>
+    </div>
+    <p class="section-title">Thành viên hiện tại</p>
+    <div class="card"><div class="row between"><div class="row" style="gap:8px;"><div class="avatar-stack"><div class="dot" style="background:#FF8A65;">H</div></div><h3 style="font-size:14px;margin:0;">Huong Le</h3></div><span class="tag amber">Quản trị</span></div></div>
+    <div class="card"><div class="row" style="gap:8px;"><div class="avatar-stack"><div class="dot" style="background:#3FB8A8;">A</div></div><h3 style="font-size:14px;margin:0;">An Nguyen</h3></div></div>
+    <div class="card"><div class="row" style="gap:8px;"><div class="avatar-stack"><div class="dot" style="background:#FFC259;">M</div></div><h3 style="font-size:14px;margin:0;">Minh Pham</h3></div></div>
+  </div>
+</div>
+
+<div class="screen" data-id="CREATE_GROUP">
+  <div class="topbar"><button class="back" onclick="nav('GROUP_PICKER')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Tạo nhóm mới</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <p class="field-label">Tên nhóm</p>
+    <input class="field" id="new-group-name" placeholder="VD: Team Product" />
+    <p class="field-label">Mô tả</p>
+    <input class="field" placeholder="VD: Nhóm rủ ăn của team Product" />
+    <button class="btn btn-primary" onclick="createGroup()">Tạo nhóm</button>
+  </div>
+</div>
+
+<div class="screen" data-id="EVENT_LIST">
+  <div class="hero-top">
+    <div class="hero-row">
+      <div>
+        <div class="hero-brand">Chào Huong</div>
+        <p class="hero-sub" onclick="nav('GROUP_PICKER')" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;" id="current-group-label">Team Sales <i data-lucide="chevron-down" style="width:12px;height:12px;"></i></p>
+      </div>
+      <div class="avatar-btn" onclick="nav('PROFILE')"><i data-lucide="user" style="width:18px;height:18px;color:#fff;"></i></div>
+    </div>
+  </div>
+  <div class="content content-lift">
+    <div class="card card-tap" style="cursor:pointer;" onclick="nav('CREATE_EVENT')">
+      <div class="row between">
+        <div><h3>Tạo lời rủ mới</h3><p class="meta">Bấm để rủ đồng nghiệp đi ăn</p></div>
+        <div class="icon-chip coral"><i data-lucide="plus" style="width:22px;height:22px;color:var(--coral-dark);"></i></div>
+      </div>
+    </div>
+
+    <div class="card card-tap" style="cursor:pointer;" onclick="openEventDetail('out','Cơm tấm Bà Ba','123 Nguyễn Trãi, Q.5')">
+      <div class="row between" style="margin-bottom:8px;"><span class="tag">Ăn ngoài</span><span class="meta">12:00 hôm nay</span></div>
+      <h3>Cơm tấm Bà Ba</h3>
+      <p class="meta">2 người tham gia · Huong Le rủ</p>
+      <div class="row between" style="margin-top:10px;">
+        <div class="avatar-stack"><div class="dot" style="background:#FF8A65;">H</div><div class="dot" style="background:#3FB8A8;">M</div></div>
+        <button class="btn btn-primary btn-sm" id="join-1" onclick="event.stopPropagation();joinEvent(this,'1')">Tham gia</button>
+      </div>
+    </div>
+
+    <div class="card card-tap" style="cursor:pointer;" onclick="openEventDetail('order','Gong Cha — order chung')">
+      <div class="row between" style="margin-bottom:8px;"><span class="tag teal">Order</span><span class="meta">15:30 hôm nay</span></div>
+      <h3>Gong Cha — order chung</h3>
+      <p class="meta">3 người tham gia · An Nguyen rủ · có link order</p>
+      <div class="row between" style="margin-top:10px;">
+        <div class="avatar-stack"><div class="dot" style="background:#FFC259;">A</div><div class="dot" style="background:#FF8A65;">H</div><div class="dot" style="background:#3FB8A8;">M</div></div>
+        <button class="btn btn-teal btn-sm" id="join-2" onclick="event.stopPropagation();joinEvent(this,'2')">Tham gia</button>
+      </div>
+    </div>
+
+    <div class="card card-tap" style="cursor:pointer;" onclick="openEventDetail('out','Lẩu cuối tuần','')">
+      <div class="row between" style="margin-bottom:8px;"><span class="tag amber">Ăn ngoài</span><span class="meta">18:30 thứ 6</span></div>
+      <h3>Lẩu cuối tuần</h3>
+      <p class="meta">1 người tham gia · Nam rủ · địa điểm chưa chốt</p>
+      <div class="row between" style="margin-top:10px;">
+        <div class="avatar-stack"><div class="dot" style="background:#FFC259;">N</div></div>
+        <button class="btn btn-outline btn-sm" id="join-3" onclick="event.stopPropagation();joinEvent(this,'3')">Tham gia</button>
+      </div>
+    </div>
+  </div>
+  <button class="fab" onclick="nav('SUGGEST_1')">
+    <i data-lucide="chef-hat" style="width:22px;height:22px;color:#fff;"></i>
+  </button>
+  <div class="navbar">
+    <button class="navitem active" onclick="nav('EVENT_LIST')"><i data-lucide="utensils" style="width:20px;height:20px;"></i>Lời rủ</button>
+    <button class="navitem" onclick="nav('PLACE_LIST')"><i data-lucide="map-pin" style="width:20px;height:20px;"></i>Quán</button>
+    <button class="navitem" onclick="nav('PROFILE')"><i data-lucide="user" style="width:20px;height:20px;"></i>Cá nhân</button>
+  </div>
+</div>
+
+<div class="screen" data-id="CREATE_EVENT">
+  <div class="topbar"><button class="back" onclick="nav('EVENT_LIST')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Tạo lời rủ mới</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <p class="field-label">Đi ăn gì đây?</p>
+    <div class="type-pill-row" id="type-pills">
+      <div class="type-pill active" onclick="selectEventType(this,'out')"><i data-lucide="utensils" style="width:22px;height:22px;"></i><span>Ăn ngoài</span></div>
+      <div class="type-pill" onclick="selectEventType(this,'order')"><i data-lucide="shopping-bag" style="width:22px;height:22px;"></i><span>Order</span></div>
+    </div>
+    <p class="field-label">Tên quán / hoạt động</p>
+    <input class="field" id="event-title" placeholder="VD: Cơm tấm Bà Ba" />
+    <div id="field-time">
+      <p class="field-label">Thời gian</p>
+      <input class="field" id="event-time" type="datetime-local" />
+    </div>
+    <div id="field-location">
+      <p class="field-label">Địa điểm</p>
+      <input class="field" placeholder="Để trống nếu chưa chốt" />
+      <p class="field-label">Link định vị</p>
+      <input class="field" placeholder="Dán link Google Maps..." />
+    </div>
+    <div id="field-orderlink" style="display:none;">
+      <p class="field-label">Link order chung</p>
+      <input class="field" placeholder="Dán link đặt đơn nhóm..." />
+    </div>
+    <button class="btn btn-primary" onclick="toast('Đã đăng lời rủ!');nav('EVENT_LIST')">Đăng lời rủ</button>
+  </div>
+</div>
+
+<div class="screen" data-id="EVENT_DETAIL">
+  <div class="topbar"><button class="back" onclick="nav('EVENT_LIST')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;" id="detail-title">Gong Cha — order chung</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <div class="card card-tint-teal" id="detail-order-card" style="text-align:center;">
+      <div class="icon-chip teal" style="margin:0 auto;"><i data-lucide="receipt" style="width:24px;height:24px;color:var(--teal-dark);"></i></div>
+      <p class="meta" style="margin-top:10px;">Đã đặt qua GrabFood</p>
+      <a href="javascript:void(0)" onclick="toast('Mở link order (demo)')" style="color:var(--teal-dark);font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:4px;">Mở link order <i data-lucide="external-link" style="width:14px;height:14px;"></i></a>
+    </div>
+    <div class="card card-tint-coral" id="detail-location-card" style="display:none;text-align:center;">
+      <div class="icon-chip coral" style="margin:0 auto;"><i data-lucide="map-pin" style="width:24px;height:24px;color:var(--coral-dark);"></i></div>
+      <h3 style="margin-top:10px;font-size:15px;" id="detail-place-name">Cơm tấm Bà Ba</h3>
+      <p class="meta" id="detail-place-address">Địa chỉ chưa chốt</p>
+      <a href="javascript:void(0)" onclick="toast('Mở Google Maps (demo)')" style="color:var(--coral-dark);font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:4px;">Xem trên Google Maps <i data-lucide="external-link" style="width:14px;height:14px;"></i></a>
+    </div>
+    <div class="card">
+      <h3>Ai tham gia (3)</h3>
+      <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap;"><span class="tag">Huong Le</span><span class="tag teal">An Nguyen</span><span class="tag amber">Minh Pham</span></div>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:10px;">Tổng hợp chi phí</h3>
+      <div id="bill-list">
+        <div class="bill-row"><span>Huong Le — Trà sữa trân châu</span><span>45.000đ</span></div>
+        <div class="bill-row"><span>An Nguyen — Trà đào cam sả</span><span>50.000đ</span></div>
+        <div class="bill-row"><span>Minh Pham — Matcha latte</span><span>55.000đ</span></div>
+      </div>
+      <div class="bill-row" style="border-bottom:none;font-weight:700;padding-top:12px;"><span>Tổng cộng</span><span id="bill-total">150.000đ</span></div>
+    </div>
+    <button class="btn btn-teal" onclick="nav('BILL_EDIT')">+ Thêm món / chỉnh chi phí</button>
+    <button class="btn btn-primary" onclick="nav('VOTE')">Đánh dấu đã ăn xong</button>
+  </div>
+</div>
+
+<div class="screen" data-id="BILL_EDIT">
+  <div class="topbar"><button class="back" onclick="nav('EVENT_DETAIL')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Chỉnh chi phí</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <p class="meta" style="margin-bottom:14px;">Nhập tên người, món đã order và giá tiền. Link sharebill Grab chỉ để tham khảo, số tiền vẫn cần nhập tay.</p>
+    <div id="bill-edit-rows"></div>
+    <button class="btn btn-outline" onclick="addBillRow()">+ Thêm dòng</button>
+    <button class="btn btn-primary" onclick="saveBill()">Lưu chi phí</button>
+  </div>
+</div>
+
+<div class="screen" data-id="VOTE">
+  <div class="topbar"><button class="back" onclick="nav('EVENT_DETAIL')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Ăn xong rồi, chấm điểm nào</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <div class="card card-tint-coral" style="text-align:center;">
+      <h3>Gong Cha — order chung</h3>
+      <p class="meta">Quán này ngon không? Vote cho mọi người biết nhé</p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14px;margin-bottom:10px;">Bạn (Huong Le)</h3>
+      <div class="row" style="gap:6px;font-size:26px;color:var(--line);" id="star-row">
+        <span class="star" onclick="rate(1)">★</span><span class="star" onclick="rate(2)">★</span><span class="star" onclick="rate(3)">★</span><span class="star" onclick="rate(4)">★</span><span class="star" onclick="rate(5)">★</span>
+      </div>
+      <button class="btn btn-danger-outline" id="blacklist-btn" style="display:none;margin-top:12px;" onclick="toggleBlacklist()"><span style="display:inline-flex;align-items:center;gap:6px;justify-content:center;width:100%;"><i data-lucide="ban" style="width:16px;height:16px;"></i>Thêm vào blacklist (cá nhân)</span></button>
+      <p class="meta" id="blacklist-hint" style="display:none;margin-top:6px;">Quán này sẽ bị ẩn khỏi gợi ý món của riêng bạn. Người khác không bị ảnh hưởng, và bạn có thể gỡ lại trong trang cá nhân bất cứ lúc nào.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:10px;">Mọi người đã vote (2/3)</h3>
+      <div class="row between" style="padding:6px 0;"><span class="meta">An Nguyen</span><span style="color:var(--amber);font-size:14px;">★★★★★</span></div>
+      <div class="row between" style="padding:6px 0;"><span class="meta">Minh Pham</span><span style="color:var(--amber);font-size:14px;">★★★★☆</span></div>
+    </div>
+    <button class="btn btn-primary" onclick="toast('Đã gửi đánh giá, cảm ơn bạn!');nav('EVENT_LIST')">Gửi đánh giá</button>
+  </div>
+</div>
+
+<div class="screen" data-id="PLACE_LIST">
+  <div class="hero-top" style="padding-bottom:20px;">
+    <div class="hero-row">
+      <div>
+        <div class="hero-brand" style="font-size:20px;">Gợi ý quán</div>
+        <p class="hero-sub">Nơi anh em đã ăn và đánh giá</p>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="row" style="gap:8px;margin:14px 0;flex-wrap:wrap;">
+      <span class="tag solid">Tất cả</span><span class="tag teal">Cơm</span><span class="tag amber">Trà sữa</span><span class="tag">Bún phở</span>
+    </div>
+    <div class="card card-tap"><div class="row" style="gap:12px;">
+      <div class="icon-chip coral"><i data-lucide="utensils" style="width:22px;height:22px;color:var(--coral-dark);"></i></div>
+      <div style="flex:1;"><div class="row between"><h3>Cơm tấm Bà Ba</h3><span style="color:var(--amber-dark);font-weight:700;font-size:13px;">★ 4.6</span></div><p class="meta">Cơm · 30-50k · 350m</p></div>
+    </div></div>
+    <div class="card card-tap"><div class="row" style="gap:12px;">
+      <div class="icon-chip teal"><i data-lucide="cup-soda" style="width:22px;height:22px;color:var(--teal-dark);"></i></div>
+      <div style="flex:1;"><div class="row between"><h3>Gong Cha</h3><span style="color:var(--amber-dark);font-weight:700;font-size:13px;">★ 4.8</span></div><p class="meta">Trà sữa · 40-60k</p></div>
+    </div></div>
+  </div>
+  <button class="fab" onclick="nav('SUGGEST_1')">
+    <i data-lucide="chef-hat" style="width:22px;height:22px;color:#fff;"></i>
+  </button>
+  <div class="navbar">
+    <button class="navitem" onclick="nav('EVENT_LIST')"><i data-lucide="utensils" style="width:20px;height:20px;"></i>Lời rủ</button>
+    <button class="navitem active" onclick="nav('PLACE_LIST')"><i data-lucide="map-pin" style="width:20px;height:20px;"></i>Quán</button>
+    <button class="navitem" onclick="nav('PROFILE')"><i data-lucide="user" style="width:20px;height:20px;"></i>Cá nhân</button>
+  </div>
+</div>
+
+<div class="screen" data-id="PROFILE">
+  <div class="hero-top" style="text-align:center;padding-bottom:52px;">
+    <div style="width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,0.22);border:2.5px solid rgba(255,255,255,0.55);display:flex;align-items:center;justify-content:center;margin:0 auto;">
+      <i data-lucide="user-round" style="width:32px;height:32px;color:#fff;"></i>
+    </div>
+    <h3 style="margin-top:10px;color:#fff;font-family:'Baloo 2',sans-serif;font-size:18px;" id="profile-name">Huong Le</h3>
+    <p style="color:rgba(255,255,255,0.85);font-size:12.5px;margin:0;">@huongle</p>
+  </div>
+  <div class="content content-lift">
+    <div class="card" style="display:flex;gap:0;padding:0;overflow:hidden;">
+      <div style="flex:1;text-align:center;padding:16px;border-right:1px solid var(--line);"><h3 style="font-size:20px;">12</h3><p class="meta">Lần đi ăn</p></div>
+      <div style="flex:1;text-align:center;padding:16px;"><h3 style="font-size:20px;">3</h3><p class="meta">Quán yêu thích</p></div>
+    </div>
+    <div class="row between" style="margin-top:18px;margin-bottom:10px;">
+      <p class="section-title" style="margin:0;">Lịch sử gần đây</p>
+      <a href="javascript:void(0)" onclick="nav('HISTORY_ALL')" style="font-size:12.5px;font-weight:700;color:var(--coral-dark);text-decoration:none;">Xem tất cả</a>
+    </div>
+    <div class="card"><div class="row between"><div><h3 style="font-size:14px;">Gong Cha — order chung</h3><p class="meta">28/09 · Đã trả 45.000đ</p></div><span class="tag teal">Xong</span></div></div>
+    <button class="btn btn-outline" onclick="toast('Đăng xuất (demo)');nav('LOGIN')">Đăng xuất</button>
+  </div>
+  <button class="fab" onclick="nav('SUGGEST_1')">
+    <i data-lucide="chef-hat" style="width:22px;height:22px;color:#fff;"></i>
+  </button>
+  <div class="navbar">
+    <button class="navitem" onclick="nav('EVENT_LIST')"><i data-lucide="utensils" style="width:20px;height:20px;"></i>Lời rủ</button>
+    <button class="navitem" onclick="nav('PLACE_LIST')"><i data-lucide="map-pin" style="width:20px;height:20px;"></i>Quán</button>
+    <button class="navitem active" onclick="nav('PROFILE')"><i data-lucide="user" style="width:20px;height:20px;"></i>Cá nhân</button>
+  </div>
+</div>
+
+<div class="screen" data-id="HISTORY_ALL">
+  <div class="topbar"><button class="back" onclick="nav('PROFILE')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Lịch sử của bạn</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <div class="card"><div class="row between"><div><h3 style="font-size:14px;">Gong Cha — order chung</h3><p class="meta">28/09 · Đã trả 45.000đ</p></div><span class="tag teal">Xong</span></div></div>
+    <div class="card"><div class="row between"><div><h3 style="font-size:14px;">Cơm tấm Bà Ba</h3><p class="meta">25/09 · Đã trả 40.000đ</p></div><span class="tag teal">Xong</span></div></div>
+    <div class="card"><div class="row between"><div><h3 style="font-size:14px;">Lẩu cuối tuần</h3><p class="meta">19/09 · Đã trả 120.000đ</p></div><span class="tag teal">Xong</span></div></div>
+    <div class="card"><div class="row between"><div><h3 style="font-size:14px;">Bún chả Hàng Quạt</h3><p class="meta">15/09 · Đã trả 40.000đ</p></div><span class="tag teal">Xong</span></div></div>
+    <div class="card"><div class="row between"><div><h3 style="font-size:14px;">Gong Cha — order chung</h3><p class="meta">08/09 · Đã trả 50.000đ</p></div><span class="tag teal">Xong</span></div></div>
+    <div class="card"><div class="row between"><div><h3 style="font-size:14px;">Cơm tấm Bà Ba</h3><p class="meta">02/09 · Đã trả 40.000đ</p></div><span class="tag teal">Xong</span></div></div>
+  </div>
+</div>
+
+<div class="screen" data-id="SUGGEST_1">
+  <div class="topbar"><button class="back" onclick="nav(prevBeforeSuggest)"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Đầu bếp gợi ý món</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <div style="text-align:center;margin-bottom:14px;">
+      <div class="icon-chip coral" style="width:64px;height:64px;border-radius:18px;margin:0 auto;"><i data-lucide="chef-hat" style="width:32px;height:32px;color:var(--coral-dark);"></i></div>
+    </div>
+    <p style="text-align:center;font-weight:700;margin:0 0 16px;">Hôm nay bạn muốn ăn kiểu gì?</p>
+    <p class="field-label">1. Món nước hay khô?</p>
+    <div class="type-pill-row" id="grp1"><div class="type-pill active" onclick="selectPill(this)"><i data-lucide="soup" style="width:20px;height:20px;"></i><span>Món nước</span></div><div class="type-pill" onclick="selectPill(this)"><i data-lucide="utensils" style="width:20px;height:20px;"></i><span>Món khô</span></div></div>
+    <p class="field-label">2. Khẩu vị</p>
+    <div class="type-pill-row" id="grp2"><div class="type-pill" onclick="selectPill(this)"><span>Ngọt</span></div><div class="type-pill active" onclick="selectPill(this)"><span>Mặn</span></div><div class="type-pill" onclick="selectPill(this)"><span>Cay</span></div><div class="type-pill" onclick="selectPill(this)"><span>Chua</span></div></div>
+    <p class="field-label">3. Loại nguyên liệu</p>
+    <div class="type-pill-row" id="grp3"><div class="type-pill" onclick="selectPill(this)"><span>Thịt</span></div><div class="type-pill active" onclick="selectPill(this)"><span>Hải sản</span></div><div class="type-pill" onclick="selectPill(this)"><span>Chay</span></div><div class="type-pill" onclick="selectPill(this)"><span>Gà</span></div></div>
+    <button class="btn btn-primary" onclick="nav('SUGGEST_2')">Tìm món cho tôi</button>
+  </div>
+</div>
+
+<div class="screen" data-id="SUGGEST_2">
+  <div class="topbar"><button class="back" onclick="nav('SUGGEST_1')"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i></button><div class="brand" style="font-size:16px;">Đầu bếp gợi ý cho bạn</div><span style="width:20px;"></span></div>
+  <div class="content">
+    <div class="card card-tint-coral" style="text-align:center;"><p class="meta">Nước · Mặn · Hải sản</p><h3 style="font-size:18px;">Có 2 món hợp gu bạn nè!</h3></div>
+    <div class="card">
+      <div class="row" style="gap:12px;"><div class="icon-chip coral"><i data-lucide="soup" style="width:20px;height:20px;color:var(--coral-dark);"></i></div><div style="flex:1;"><h3>Bún riêu cua</h3><p class="meta">Bún phở · Hải sản · 35-45k</p></div></div>
+      <button class="btn btn-outline" style="margin-top:10px;" onclick="prefillAndGo('Bún riêu cua')">Rủ mọi người ăn món này</button>
+    </div>
+    <div class="card">
+      <div class="row" style="gap:12px;"><div class="icon-chip amber"><i data-lucide="soup" style="width:20px;height:20px;color:var(--amber-dark);"></i></div><div style="flex:1;"><h3>Lẩu hải sản chua cay</h3><p class="meta">Lẩu · Hải sản · 60-90k</p></div></div>
+      <button class="btn btn-outline" style="margin-top:10px;" onclick="prefillAndGo('Lẩu hải sản chua cay')">Rủ mọi người ăn món này</button>
+    </div>
+    <div class="card card-tint-teal">
+      <span class="tag teal" style="display:inline-flex;align-items:center;gap:4px;"><i data-lucide="dices" style="width:13px;height:13px;"></i>Random trong nhóm phù hợp</span>
+      <div class="row" style="gap:12px;margin-top:8px;"><div class="icon-chip teal"><i data-lucide="soup" style="width:20px;height:20px;color:var(--teal-dark);"></i></div><div style="flex:1;"><h3 id="rnd-name">Lẩu hải sản chua cay</h3><p class="meta">Chọn ngẫu nhiên từ nhóm phù hợp tiêu chí</p></div></div>
+      <button class="btn btn-teal" style="margin-top:10px;" onclick="prefillAndGo(document.getElementById('rnd-name').textContent)">Rủ mọi người ăn món này</button>
+    </div>
+    <button class="btn btn-outline" onclick="randomAgain()">Random lại (vẫn đúng tiêu chí)</button>
+    <button class="btn btn-teal" onclick="nav('SUGGEST_1')">Đổi tiêu chí khác</button>
+  </div>
+</div>
+
+</div></div>
+
+<script>
+var userGroups = ['Team Sales', 'Team Marketing'];
+var hasEnteredGroup = false;
+function toggleDemoGroups(){
+  var el = document.getElementById('demo-group-toggle');
+  if(userGroups.length > 1){
+    userGroups = ['Team Sales'];
+    el.textContent = 'Demo: tài khoản này có 1 nhóm (bấm để đổi thành 2 nhóm)';
+  } else {
+    userGroups = ['Team Sales', 'Team Marketing'];
+    el.textContent = 'Demo: tài khoản này có 2 nhóm (bấm để đổi thành 1 nhóm)';
+  }
+}
+function enterApp(){
+  if(userGroups.length > 1){
+    nav('GROUP_PICKER');
+  } else {
+    enterGroup(userGroups[0]);
+  }
+}
+function enterGroup(name){
+  document.getElementById('current-group-label').innerHTML = name + ' <i data-lucide="chevron-down" style="width:12px;height:12px;"></i>';
+  hasEnteredGroup = true;
+  nav('EVENT_LIST');
+  toast('Đã vào nhóm ' + name);
+  if(window.lucide){ lucide.createIcons(); }
+}
+function createGroup(){
+  var name = document.getElementById('new-group-name').value.trim();
+  if(!name){ toast('Nhập tên nhóm trước đã nhé'); return; }
+  userGroups.push(name);
+  document.getElementById('current-group-label').innerHTML = name + ' <i data-lucide="chevron-down" style="width:12px;height:12px;"></i>';
+  toast('Đã tạo nhóm ' + name);
+  openGroupMembers(name);
+  if(window.lucide){ lucide.createIcons(); }
+}
+function openGroupMembers(name){
+  document.getElementById('members-group-title').textContent = 'Thành viên · ' + name;
+  var slug = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+  document.getElementById('group-invite-link').value = 'https://nomnom.app/join/' + slug + '-x7k2';
+  nav('GROUP_MEMBERS');
+}
+function copyInviteLink(){
+  var el = document.getElementById('group-invite-link');
+  el.select();
+  try{ document.execCommand('copy'); }catch(e){}
+  toast('Đã sao chép link mời!');
+}
+var prevBeforeSuggest = 'EVENT_LIST';
+var lastNonSuggest = 'EVENT_LIST';
+var billItems = [
+  {name:'Huong Le', item:'Trà sữa trân châu', price:45000},
+  {name:'An Nguyen', item:'Trà đào cam sả', price:50000},
+  {name:'Minh Pham', item:'Matcha latte', price:55000}
+];
+function nav(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  var target = document.querySelector('.screen[data-id="'+id+'"]');
+  if(target){ target.classList.add('active'); target.parentElement.scrollTop = 0; }
+  if(id !== 'SUGGEST_1' && id !== 'SUGGEST_2'){ lastNonSuggest = id; prevBeforeSuggest = id; }
+  if(id === 'BILL_EDIT'){ renderBillEdit(); }
+  if(id === 'CREATE_EVENT'){ setDefaultEventTime(); }
+  if(id === 'GROUP_PICKER'){
+    document.getElementById('group-picker-back').style.visibility = hasEnteredGroup ? 'visible' : 'hidden';
+  }
+}
+function renderBillEdit(){
+  var wrap = document.getElementById('bill-edit-rows');
+  wrap.innerHTML = '';
+  billItems.forEach(function(row, i){
+    var div = document.createElement('div');
+    div.className = 'card';
+    div.style.padding = '12px';
+    div.innerHTML =
+      '<input class="field" style="margin-bottom:8px;" value="'+row.name+'" placeholder="Tên người ăn" onchange="billItems['+i+'].name=this.value" />'+
+      '<input class="field" style="margin-bottom:8px;" value="'+row.item+'" placeholder="Món đã order" onchange="billItems['+i+'].item=this.value" />'+
+      '<div class="row" style="gap:8px;">'+
+        '<input class="field" style="margin-bottom:0;" type="number" value="'+row.price+'" placeholder="Giá tiền" onchange="billItems['+i+'].price=Number(this.value)||0" />'+
+        '<button class="btn btn-danger-outline" style="width:auto;margin:0;padding:12px 14px;" onclick="removeBillRow('+i+')">✕</button>'+
+      '</div>';
+    wrap.appendChild(div);
+  });
+}
+function addBillRow(){
+  billItems.push({name:'', item:'', price:0});
+  renderBillEdit();
+}
+function removeBillRow(i){
+  billItems.splice(i,1);
+  renderBillEdit();
+}
+function fmtVnd(n){ return Number(n||0).toLocaleString('vi-VN') + 'đ'; }
+function saveBill(){
+  var list = document.getElementById('bill-list');
+  list.innerHTML = '';
+  var total = 0;
+  billItems.forEach(function(row){
+    total += Number(row.price)||0;
+    var label = row.name + (row.item ? ' — ' + row.item : '');
+    list.innerHTML += '<div class="bill-row"><span>'+label+'</span><span>'+fmtVnd(row.price)+'</span></div>';
+  });
+  document.getElementById('bill-total').textContent = fmtVnd(total);
+  toast('Đã lưu chi phí');
+  nav('EVENT_DETAIL');
+}
+function toast(msg){
+  var h = document.getElementById('hint');
+  h.textContent = msg;
+  h.classList.add('show');
+  clearTimeout(window._t);
+  window._t = setTimeout(function(){h.classList.remove('show');}, 1600);
+}
+var eventData = {
+  '1':{type:'out', title:'Cơm tấm Bà Ba', addr:'123 Nguyễn Trãi, Q.5'},
+  '2':{type:'order', title:'Gong Cha — order chung'},
+  '3':{type:'out', title:'Lẩu cuối tuần', addr:''}
+};
+function joinEvent(btn, id){
+  if(btn.textContent.trim() === 'Tham gia'){
+    btn.textContent = 'Đã tham gia ✓';
+    btn.disabled = true;
+    toast('Bạn đã tham gia lời rủ!');
+  }
+  var d = eventData[id] || {type:'out', title:'Chi tiết lời rủ'};
+  openEventDetail(d.type, d.title, d.addr);
+}
+function openEventDetail(type, title, address){
+  document.getElementById('detail-title').textContent = title;
+  document.getElementById('detail-order-card').style.display = (type === 'order') ? 'block' : 'none';
+  document.getElementById('detail-location-card').style.display = (type === 'out') ? 'block' : 'none';
+  if(type === 'out'){
+    document.getElementById('detail-place-name').textContent = title;
+    document.getElementById('detail-place-address').textContent = address || 'Địa chỉ chưa chốt';
+  }
+  nav('EVENT_DETAIL');
+}
+function selectPill(el){
+  Array.from(el.parentElement.children).forEach(function(c){c.classList.remove('active');});
+  el.classList.add('active');
+}
+function selectEventType(el, type){
+  selectPill(el);
+  document.getElementById('field-time').style.display = (type === 'out') ? 'block' : 'none';
+  document.getElementById('field-location').style.display = (type === 'out') ? 'block' : 'none';
+  document.getElementById('field-orderlink').style.display = (type === 'order') ? 'block' : 'none';
+}
+function setDefaultEventTime(){
+  var el = document.getElementById('event-time');
+  var now = new Date(Date.now() - new Date().getTimezoneOffset()*60000);
+  el.value = now.toISOString().slice(0,16);
+}
+function rate(n){
+  var stars = document.querySelectorAll('#star-row .star');
+  stars.forEach(function(s, i){ s.style.color = i < n ? '#FFC259' : 'var(--line)'; });
+  toast('Bạn chấm ' + n + ' sao');
+  var btn = document.getElementById('blacklist-btn');
+  var hint = document.getElementById('blacklist-hint');
+  if(n === 1){
+    btn.style.display = 'block';
+    hint.style.display = 'block';
+  } else {
+    btn.style.display = 'none';
+    hint.style.display = 'none';
+  }
+}
+function toggleBlacklist(){
+  var btn = document.getElementById('blacklist-btn');
+  if(btn.textContent.indexOf('Đã thêm') === -1){
+    btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:6px;justify-content:center;width:100%;"><i data-lucide="check" style="width:16px;height:16px;"></i>Đã thêm vào blacklist — Gỡ ra</span>';
+    toast('Đã ẩn quán này khỏi gợi ý món của bạn');
+  } else {
+    btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:6px;justify-content:center;width:100%;"><i data-lucide="ban" style="width:16px;height:16px;"></i>Thêm vào blacklist (cá nhân)</span>';
+    toast('Đã gỡ khỏi blacklist');
+  }
+  if(window.lucide){ lucide.createIcons(); }
+}
+var randomPool = ['Lẩu hải sản chua cay','Bún riêu cua','Cháo hàu','Mì hải sản cay'];
+function randomAgain(){
+  var pick = randomPool[Math.floor(Math.random()*randomPool.length)];
+  document.getElementById('rnd-name').textContent = pick;
+  toast('Đã random lại: ' + pick);
+}
+function prefillAndGo(name){
+  nav('CREATE_EVENT');
+  document.getElementById('event-title').value = name;
+  toast('Đã điền sẵn: ' + name);
+}
+if(window.lucide){ lucide.createIcons(); }
+</script>
+</body>
+</html>

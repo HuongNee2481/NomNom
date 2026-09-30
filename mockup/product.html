@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NomNom — Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+  :root{
+    --cream:#FFFBF5;
+    --paper:#FFFFFF;
+    --coral:#FF7A55;
+    --coral2:#FF9F6B;
+    --coral-dark:#D9502E;
+    --teal:#2FB6A6;
+    --teal2:#5FD1C0;
+    --teal-dark:#1F7C70;
+    --amber:#FFC259;
+    --amber-dark:#9A6303;
+    --ink:#2B2320;
+    --ink-soft:#8C7F77;
+    --line:#F0E5D8;
+    --grad-coral:linear-gradient(135deg, var(--coral2), var(--coral));
+    --grad-teal:linear-gradient(135deg, var(--teal2), var(--teal));
+    --grad-hero:linear-gradient(160deg, #FFB86B 0%, #FF7A55 55%, #EF5A46 100%);
+    --shadow-coral:0 10px 20px -6px rgba(217,80,46,0.4);
+    --shadow-teal:0 10px 20px -6px rgba(31,124,112,0.35);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Be Vietnam Pro', -apple-system, 'Segoe UI', sans-serif;
+    background:#F3E9DC;
+    color:var(--ink);
+    padding:32px 16px;
+  }
+  .screens{
+    display:flex;
+    flex-wrap:wrap;
+    gap:32px;
+    justify-content:center;
+    align-items:flex-start;
+  }
+  .phone{
+    width:360px;
+    background:var(--cream);
+    border-radius:32px;
+    padding:14px;
+    box-shadow:0 20px 40px rgba(58,46,42,0.18);
+  }
+  .screen-label{
+    text-align:center;
+    font-size:12px;
+    color:#8A7A72;
+    margin-bottom:8px;
+    font-weight:600;
+    letter-spacing:.03em;
+  }
+  .screen{
+    background:var(--paper);
+    border-radius:26px;
+    overflow:hidden;
+    min-height:640px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    box-shadow:0 1px 2px rgba(43,35,32,0.04), 0 6px 16px rgba(43,35,32,0.06);
+  }
+  .fab{
+    position:absolute;
+    right:16px;
+    bottom:78px;
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    background:var(--grad-hero);
+    box-shadow:0 10px 22px -4px rgba(154,99,3,0.5);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:5;
+    border:2.5px solid rgba(255,255,255,0.55);
+  }
+  .hero-top{
+    padding:20px 20px 44px;
+    background:var(--grad-hero);
+    position:relative;
+    overflow:hidden;
+    border-radius:0 0 26px 26px;
+  }
+  .hero-top::before{content:'';position:absolute;top:-40px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,0.14);}
+  .hero-top::after{content:'';position:absolute;bottom:-55px;left:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.1);}
+  .hero-brand{font-family:'Baloo 2',sans-serif;font-size:21px;font-weight:700;color:#fff;position:relative;z-index:1;}
+  .hero-sub{color:rgba(255,255,255,0.88);font-size:12.5px;margin:2px 0 0;font-weight:500;position:relative;z-index:1;}
+  .content-lift{margin-top:-26px;position:relative;z-index:2;}
+  .topbar{
+    padding:18px 20px 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .brand{
+    font-family:'Baloo 2',sans-serif;
+    font-size:19px;
+    font-weight:700;
+    color:var(--coral-dark);
+  }
+  .content{
+    flex:1;
+    padding:0 18px 18px;
+    overflow-y:auto;
+  }
+  .card{
+    background:var(--paper);
+    border-radius:18px;
+    padding:14px;
+    margin-bottom:14px;
+    box-shadow:0 1px 2px rgba(43,35,32,0.04), 0 6px 16px rgba(43,35,32,0.06);
+  }
+  .icon-chip{width:50px;height:50px;border-radius:15px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .icon-chip.coral{background:linear-gradient(150deg,#FFE0CF,#FFCCB0);}
+  .icon-chip.teal{background:linear-gradient(150deg,#D3F1EA,#B7E7DC);}
+  .icon-chip.amber{background:linear-gradient(150deg,#FFEBC2,#FFDD9B);}
+  .card-tint-coral{background:#FFF1EA;box-shadow:none;border:1px solid #FBDCCB;}
+  .card-tint-teal{background:#E9F7F4;box-shadow:none;border:1px solid #CDEBE4;}
+  .btn{
+    display:block;
+    width:100%;
+    text-align:center;
+    padding:13px;
+    border-radius:14px;
+    border:none;
+    font-size:14.5px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .btn-primary{background:var(--grad-coral);color:#fff;box-shadow:var(--shadow-coral);}
+  .btn-teal{background:var(--grad-teal);color:#fff;box-shadow:var(--shadow-teal);}
+  .btn-outline{background:var(--paper);border:1.5px solid var(--line);color:var(--ink);}
+  .tag{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    padding:5px 11px;
+    border-radius:20px;
+    background:#FFEAE0;
+    color:var(--coral-dark);
+  }
+  .tag.teal{background:#E3F5F1;color:var(--teal-dark);}
+  .tag.amber{background:#FFF1D6;color:var(--amber-dark);}
+  .tag.solid{background:var(--coral-dark);color:#fff;}
+  .row{display:flex;align-items:center;gap:10px;}
+  .between{justify-content:space-between;}
+  h3{margin:0 0 4px;font-size:15.5px;font-weight:700;}
+  p.meta{margin:0;font-size:12.5px;color:var(--ink-soft);}
+  .field{
+    width:100%;
+    border:1.5px solid var(--line);
+    border-radius:13px;
+    padding:12px 14px;
+    font-size:14px;
+    margin-bottom:12px;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Be Vietnam Pro',sans-serif;
+  }
+  .field-label{font-size:13px;font-weight:600;margin:0 0 6px;color:var(--ink-soft);}
+  .type-pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+  .type-pill{
+    border:1.5px solid var(--line);
+    border-radius:13px;
+    padding:8px 10px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    width:70px;
+    background:var(--paper);
+    color:var(--ink-soft);
+  }
+  .type-pill.active{border-color:transparent;background:var(--grad-coral);box-shadow:var(--shadow-coral);color:#fff;}
+  .type-pill.active span{color:#fff;}
+  .type-pill span{font-size:11px;font-weight:600;}
+  .avatar-stack{display:flex;}
+  .avatar-stack .dot{
+    width:26px;height:26px;border-radius:50%;
+    border:2px solid #fff;
+    margin-left:-8px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:700;color:#fff;
+  }
+  .avatar-stack .dot:first-child{margin-left:0;}
+  .navbar{
+    display:flex;
+    gap:4px;
+    box-shadow:0 -1px 0 var(--line);
+    padding:10px 12px 14px;
+  }
+  .navitem{
+    flex:1;
+    text-align:center;
+    font-size:11px;
+    font-weight:600;
+    color:var(--ink-soft);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    padding:7px 0;
+    border-radius:14px;
+  }
+  .navitem.active{color:var(--coral-dark);background:#FFEAE0;}
+  .bill-row{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    padding:8px 0;
+    border-bottom:1px dashed var(--line);
+    font-size:13px;
+  }
+  .bill-row:last-child{border-bottom:none;}
+  .bill-row span:last-child{white-space:nowrap;font-weight:600;}
+</style>
+</head>
+<body>
+<div class="screens">
+
+<div>
+  <div class="screen-label">MH-USER-001 — Đăng nhập</div>
+  <div class="phone"><div class="screen" id="MH-USER-001">
+    <div class="hero-top" style="border-radius:0 0 20px 20px;padding:32px 20px 44px;text-align:center;">
+      <div style="width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+        <i data-lucide="chef-hat" style="width:28px;height:28px;color:#fff;"></i>
+      </div>
+      <div class="hero-brand" style="font-size:22px;">NomNom</div>
+      <p class="hero-sub" style="margin-top:4px;">Rủ đồng nghiệp đi ăn, đi uống dễ dàng hơn</p>
+    </div>
+    <div class="content content-lift">
+      <div class="card" style="text-align:center;">
+        <h3 style="font-size:18px;">Chào bạn</h3>
+        <p class="meta">Đăng nhập để bắt đầu rủ rê đồng nghiệp</p>
+      </div>
+      <p class="field-label">Tên đăng nhập</p>
+      <input class="field" placeholder="VD: huongle" />
+      <p class="field-label">Mật khẩu</p>
+      <input class="field" type="password" placeholder="Nhập mật khẩu" />
+      <button class="btn btn-primary">Vào NomNom</button>
+      <p class="meta" style="text-align:center;">Nếu tài khoản chỉ thuộc 1 nhóm → tự động vào thẳng nhóm đó. Nếu thuộc nhiều nhóm → hiện màn Chọn nhóm bên dưới.</p>
+    </div>
+  </div></div>
+</div>
+
+<div>
+  <div class="screen-label">MH-GROUP-001 — Chọn nhóm lần đầu (không có nút back; khi chủ động đổi nhóm từ danh sách lời rủ thì có nút back về lại)</div>
+  <div class="phone"><div class="screen" id="MH-GROUP-001">
+    <div class="topbar">
+      <span style="width:34px;"></span>
+      <div class="brand" style="font-size:16px;">Chọn nhóm</div>
+      <span style="width:34px;"></span>
+    </div>
+    <div class="content">
+      <p class="meta" style="margin-bottom:14px;">Bạn đang tham gia nhiều nhóm, chọn 1 nhóm để tiếp tục nhé.</p>
+      <div class="card">
+        <div class="row" style="gap:12px;">
+          <div class="icon-chip coral"><i data-lucide="users" style="width:22px;height:22px;color:var(--coral-dark);"></i></div>
+          <div style="flex:1;"><h3>Team Sales</h3><p class="meta">12 thành viên</p></div>
+          <button class="btn btn-outline" style="width:auto;padding:9px 18px;margin:0;">Mời</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row" style="gap:12px;">
+          <div class="icon-chip teal"><i data-lucide="users" style="width:22px;height:22px;color:var(--teal-dark);"></i></div>
+          <div style="flex:1;"><h3>Team Marketing</h3><p class="meta">7 thành viên</p></div>
+          <button class="btn btn-outline" style="width:auto;padding:9px 18px;margin:0;">Mời</button>
+        </div>
+      </div>
+      <button class="btn btn-outline">+ Tạo nhóm mới</button>
+    </div>
+  </div></div>
+</div>
+
+<div>
+  <div class="screen-label">MH-GROUP-002 — Tạo nhóm mới</div>
+  <div class="phone"><div class="screen" id="MH-GROUP-002">
+    <div class="topbar">
+      <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+      <div class="brand" style="font-size:16px;">Tạo nhóm mới</div>
+      <span style="width:20px;"></span>
+    </div>
+    <div class="content">
+      <p class="field-label">Tên nhóm</p>
+      <input class="field" placeholder="VD: Team Product" />
+      <p class="field-label">Mô tả</p>
+      <input class="field" placeholder="VD: Nhóm rủ ăn của team Product" />
+      <button class="btn btn-primary">Tạo nhóm</button>
+    </div>
+  </div></div>
+</div>
+
+<div>
+  <div class="screen-label">MH-GROUP-003 — Thành viên nhóm & link mời</div>
+  <div class="phone"><div class="screen" id="MH-GROUP-003">
+    <div class="topbar">
+      <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+      <div class="brand" style="font-size:16px;">Thành viên · Team Sales</div>
+      <span style="width:20px;"></span>
+    </div>
+    <div class="content">
+      <div class="card card-tint-coral" style="text-align:center;">
+        <div class="icon-chip coral" style="margin:0 auto;"><i data-lucide="link" style="width:22px;height:22px;color:var(--coral-dark);"></i></div>
+        <p class="meta" style="margin-top:10px;">Gửi link này cho đồng nghiệp để họ tự tham gia nhóm</p>
+        <div class="row" style="gap:8px;margin-top:10px;">
+          <input class="field" style="margin-bottom:0;font-size:12.5px;" readonly value="https://nomnom.app/join/team-sales-x7k2" />
+          <button class="btn btn-primary" style="width:auto;padding:9px 16px;margin:0;">Sao chép</button>
+        </div>
+      </div>
+      <p class="section-title">Thành viên hiện tại</p>
+      <div class="card"><div class="row between"><div class="row" style="gap:8px;"><div class="avatar-stack"><div class="dot" style="background:#FF8A65;">H</div></div><h3 style="font-size:14px;margin:0;">Huong Le</h3></div><span class="tag amber">Quản trị</span></div></div>
+      <div class="card"><div class="row" style="gap:8px;"><div class="avatar-stack"><div class="dot" style="background:#3FB8A8;">A</div></div><h3 style="font-size:14px;margin:0;">An Nguyen</h3></div></div>
+      <div class="card"><div class="row" style="gap:8px;"><div class="avatar-stack"><div class="dot" style="background:#FFC259;">M</div></div><h3 style="font-size:14px;margin:0;">Minh Pham</h3></div></div>
+    </div>
+  </div></div>
+</div>
+
+<div>
+  <div class="screen-label">MH-EVENT-001 — Danh sách lời rủ</div>
+  <div class="phone"><div class="screen" id="MH-EVENT-001">
+    <div class="hero-top">
+      <div class="row between">
+        <div>
+          <div class="hero-brand">Chào Huong</div>
+          <p class="hero-sub" style="display:inline-flex;align-items:center;gap:4px;">Team Sales <i data-lucide="chevron-down" style="width:12px;height:12px;"></i></p>
+        </div>
+        <div style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.22);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;"><i data-lucide="user" style="width:18px;height:18px;color:#fff;"></i></div>
+      </div>
+    </div>
+    <div class="content content-lift">
+      <div class="card">
+        <div class="row between">
+          <div>
+            <h3>Tạo lời rủ mới</h3>
+            <p class="meta">Bấm để rủ đồng nghiệp đi ăn</p>
+          </div>
+          <div class="icon-chip coral"><i data-lucide="plus" style="width:22px;height:22px;color:var(--coral-dark);"></i></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row between" style="margin-bottom:8px;">
+          <span class="tag">Ăn ngoài</span>
+          <span class="meta">12:00 hôm nay</span>
+        </div>
+        <h3>Cơm tấm Bà Ba</h3>
+        <p class="meta">2 người tham gia · Huong Le rủ</p>
+        <div class="row between" style="margin-top:10px;">
+          <div class="avatar-stack">
+            <div class="dot" style="background:#FF8A65;">H</div>
+            <div class="dot" style="background:#3FB8A8;">M</div>
+          </div>
+          <button class="btn btn-primary" style="width:auto;padding:8px 18px;">Tham gia</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row between" style="margin-bottom:8px;">
+          <span class="tag teal">Order</span>
+          <span class="meta">15:30 hôm nay</span>
+        </div>
+        <h3>Gong Cha — order chung</h3>
+        <p class="meta">3 người tham gia · An Nguyen rủ · có link order</p>
+        <div class="row between" style="margin-top:10px;">
+          <div class="avatar-stack">
+            <div class="dot" style="background:#FFC259;">A</div>
+            <div class="dot" style="background:#FF8A65;">H</div>
+            <div class="dot" style="background:#3FB8A8;">M</div>
+          </div>
+          <button class="btn btn-teal" style="width:auto;padding:8px 18px;">Tham gia</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row between" style="margin-bottom:8px;">
+          <span class="tag amber">Ăn ngoài</span>
+          <span class="meta">18:30 thứ 6</span>
+        </div>
+        <h3>Lẩu cuối tuần</h3>
+        <p class="meta">1 người tham gia · Nam rủ · địa điểm chưa chốt</p>
+        <div class="row between" style="margin-top:10px;">
+          <div class="avatar-stack">
+            <div class="dot" style="background:#FFC259;">N</div>
+          </div>
+          <button class="btn btn-outline" style="width:auto;padding:8px 18px;">Tham gia</button>
+        </div>
+      </div>
+    </div>
+    <div class="fab">
+      <i data-lucide="chef-hat" style="width:22px;height:22px;color:#fff;"></i>
+    </div>
+    <div class="navbar">
+      <div class="navitem active">
+        <i data-lucide="utensils" style="width:20px;height:20px;"></i>
+        Lời rủ
+      </div>
+      <div class="navitem">
+        <i data-lucide="map-pin" style="width:20px;height:20px;"></i>
+        Quán
+      </div>
+      <div class="navitem">
+        <i data-lucide="user" style="width:20px;height:20px;"></i>
+        Cá nhân
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<div>
+  <div class="screen-label">MH-EVENT-002 — Tạo lời rủ</div>
+  <div class="phone"><div class="screen" id="MH-EVENT-002">
+    <div class="topbar">
+      <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+      <div class="brand" style="font-size:16px;">Tạo lời rủ mới</div>
+      <span style="width:20px;"></span>
+    </div>
+    <div class="content">
+      <p class="field-label">Đi ăn gì đây?</p>
+      <div class="type-pill-row">
+        <div class="type-pill active">
+          <i data-lucide="utensils" style="width:22px;height:22px;"></i>
+          <span>Ăn ngoài</span>
+        </div>
+        <div class="type-pill">
+          <i data-lucide="shopping-bag" style="width:22px;height:22px;"></i>
+          <span>Order</span>
+        </div>
+      </div>
+
+      <p class="field-label">Tên quán / hoạt động</p>
+      <input class="field" placeholder="VD: Cơm tấm Bà Ba" />
+
+      <p class="field-label">Thời gian</p>
+      <input class="field" type="datetime-local" value="2026-09-29T17:58" />
+
+      <p class="field-label">Địa điểm</p>
+      <input class="field" placeholder="Để trống nếu chưa chốt" />
+
+      <p class="field-label">Link định vị</p>
+      <input class="field" placeholder="Dán link Google Maps..." />
+
+      <p class="field-label">Ghi chú</p>
+      <input class="field" placeholder="VD: quán quen, có ship được không..." />
+
+      <button class="btn btn-primary" style="margin-top:6px;">Đăng lời rủ</button>
+    </div>
+  </div></div>
+</div>
+
+<div>
+  <div class="screen-label">MH-EVENT-003a — Chi tiết (loại Order)</div>
+  <div class="phone"><div class="screen" id="MH-EVENT-003">
+    <div class="topbar">
+      <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+      <div class="brand" style="font-size:16px;">Gong Cha — order chung</div>
+      <span style="width:20px;"></span>
+    </div>
+    <div class="content">
+      <div class="card card-tint-teal" style="text-align:center;">
+        <div class="icon-chip teal" style="margin:0 auto;"><i data-lucide="receipt" style="width:24px;height:24px;color:var(--teal-dark);"></i></div>
+        <p class="meta" style="margin-top:10px;">Đã đặt qua GrabFood</p>
+        <a href="#" style="color:var(--teal-dark);font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:4px;">Mở link order <i data-lucide="external-link" style="width:14px;height:14px;"></i></a>
+      </div>
+
+      <div class="card">
+        <h3>Ai tham gia (3)</h3>
+        <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap;">
+          <span class="tag">Huong Le</span>
+          <span class="tag teal">An Nguyen</span>
+          <span class="tag amber">Minh Pham</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:10px;">Tổng hợp chi phí</h3>
+        <div class="bill-row"><span>Huong Le — Trà sữa trân châu</span><span>45.000đ</span></div>
+        <div class="bill-row"><span>An Nguyen — Trà đào cam sả</span><span>50.000đ</span></div>
+        <div class="bill-row"><span>Minh Pham — Matcha latte</span><span>55.000đ</span></div>
+        <div class="bill-row" style="border-bottom:none;font-weight:700;padding-top:12px;">
+          <span>Tổng cộng</span><span>150.000đ</span>
+        </div>
+      </div>
+
+      <button class="btn btn-teal">+ Thêm món / chỉnh chi phí</button>
+      <button class="btn btn-primary" style="margin-top:10px;">Đánh dấu đã ăn xong</button>
+    </div>
+  </div></div>
+</div>
+
+<div>
+  <div class="screen-label">MH-EVENT-003b — Chi tiết (loại Ăn ngoài)</div>
+  <div class="phone"><div class="screen" id="MH-EVENT-003B">
+    <div class="topbar">
+      <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+      <div class="brand" style="font-size:16px;">Cơm tấm Bà Ba</div>
+      <span style="width:20px;"></span>
+    </div>
+    <div class="content">
+      <div class="card card-tint-coral" style="text-align:center;">
+        <div class="icon-chip coral" style="margin:0 auto;"><i data-lucide="map-pin" style="width:24px;height:24px;color:var(--coral-dark);"></i></div>
+        <h3 style="margin-top:10px;font-size:15px;">Cơm tấm Bà Ba</h3>
+        <p class="meta">123 Nguyễn Trãi, Q.5</p>
+        <a href="#" style="color:var(--coral-dark);font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:4px;">Xem trên Google Maps <i data-lucide="external-link" style="width:14px;height:14px;"></i></a>
+      </div>
+
+      <div class="card">
+        <h3>Ai tham gia (2)</h3>
+        <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap;">
+          <span class="tag">Huong Le</span>
+          <span class="tag teal">Minh Pham</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:10px;">Tổng hợp chi phí</h3>
+        <div class="bill-row"><span>Huong Le — Cơm sườn</span><span>35.000đ</span></div>
+        <div class="bill-row"><span>Minh Pham — Cơm gà</span><span>32.000đ</span></div>
+        <div class="bill-row" style="border-bottom:none;font-weight:700;padding-top:12px;">
+          <span>Tổng cộng</span><span>67.000đ</span>
+        </div>
+      </div>
+
+      <button class="btn btn-teal">+ Thêm món / chỉnh chi phí</button>
+      <button class="btn btn-primary" style="margin-top:10px;">Đánh dấu đã ăn xong</button>
+    </div>
+  </div></div>
+</div>
+
+<div>
+  <div class="screen-label">MH-EVENT-004 — Vote đánh giá quán sau khi ăn</div>
+  <div class="phone"><div class="screen" id="MH-EVENT-004">
+    <div class="topbar">
+      <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+      <div class="brand" style="font-size:16px;">Ăn xong rồi, chấm điểm nào</div>
+      <span style="width:20px;"></span>
+    </div>
+    <div class="content">
+      <div class="card card-tint-coral" style="text-align:center;">
+        <h3>Gong Cha — order chung</h3>
+        <p class="meta">Quán này ngon không? Vote cho mọi người biết nhé</p>
+      </div>
+
+      <div class="card">
+        <div class="row between" style="margin-bottom:10px;">
+          <h3 style="font-size:14px;">Bạn (Huong Le)</h3>
+        </div>
+        <div class="row" style="gap:6px;font-size:26px;color:#FFC259;">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span style="color:#F0E3D6;">★</span>
+        </div>
+      </div>
+
+      <div class="card" style="border:1px solid #F5C4B3;">
+        <p class="meta" style="margin-bottom:8px;">Nếu vote 1 sao, hiện thêm:</p>
+        <button class="btn btn-outline" style="border-color:#E24B4A;color:#A32D2D;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px;"><i data-lucide="ban" style="width:16px;height:16px;"></i>Thêm vào blacklist (cá nhân)</button>
+        <p class="meta">Quán bị ẩn khỏi gợi ý món của riêng bạn, người khác không bị ảnh hưởng. Có thể gỡ lại ở trang cá nhân.</p>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:10px;">Mọi người đã vote (2/3)</h3>
+        <div class="row between" style="padding:6px 0;">
+          <span class="meta">An Nguyen</span>
+          <span style="color:#FFC259;font-size:14px;">★★★★★</span>
+        </div>
+        <div class="row between" style="padding:6px 0;">
+          <span class="meta">Minh Pham</span>
+          <span style="color:#FFC259;font-size:14px;">★★★★☆</span>
+        </div>
+        <div class="row between" style="padding:6px 0;">
+          <span class="meta" style="color:var(--ink-soft);">Huong Le</span>
+          <span style="color:var(--ink-soft);font-size:13px;">Chưa vote</span>
+        </div>
+      </div>
+
+      <div class="card" style="text-align:center;">
+        <p class="meta">Điểm trung bình quán</p>
+        <h3 style="font-size:22px;color:#FFC259;">★ 4.5</h3>
+      </div>
+
+      <button class="btn btn-primary">Gửi đánh giá</button>
+    </div>
+  </div></div>
+</div>
+
+<div>
+  <div class="screen-label">MH-PLACE-001 — Danh sách quán (chưa có dữ liệu)</div>
+  <div class="phone"><div class="screen" id="MH-PLACE-001">
+    <div class="topbar">
+      <div class="brand" style="font-size:16px;">Gợi ý quán</div>
+    </div>
+    <div class="content">
+      <div class="row" style="gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+        <span class="tag">Tất cả</span>
+        <span class="tag teal">Cơm</span>
+        <span class="tag amber">Trà sữa</span>
+        <span class="tag">Bún phở</span>
+      </div>
+
+      <div style="text-align:center;padding:32px 0;">
+        <div class="icon-chip coral" style="width:64px;height:64px;border-radius:20px;margin:0 auto;"><i data-lucide="utensils" style="width:30px;height:30px;color:var(--coral-dark);"></i></div>
+        <h3 style="margin-top:12px;">Chưa có quán nào</h3>
+        <p class="meta">Danh sách này tự sinh ra từ tên quán / hoạt động trong các lời rủ (Ăn ngoài lẫn Order) — tạo lời rủ đầu tiên để bắt đầu nhé</p>
+      </div>
+    </div>
+    <div class="navbar">
+      <div class="navitem">
+        <i data-lucide="utensils" style="width:20px;height:20px;"></i>
+        Lời rủ
+      </div>
+      <div class="navitem active">
+        <i data-lucide="map-pin" style="width:20px;height:20px;"></i>
+        Quán
+      </div>
+      <div class="navitem">
+        <i data-lucide="user" style="width:20px;height:20px;"></i>
+        Cá nhân
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<div>
+  <div class="screen-label">MH-PLACE-002 — Danh sách quán (có dữ liệu)</div>
+  <div class="phone"><div class="screen" id="MH-PLACE-002">
+    <div class="hero-top" style="padding-bottom:20px;">
+      <div class="row between">
+        <div>
+          <div class="hero-brand" style="font-size:19px;">Gợi ý quán</div>
+          <p class="hero-sub">Nơi anh em đã ăn và đánh giá</p>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="row" style="gap:8px;margin:14px 0;flex-wrap:wrap;">
+        <span class="tag solid">Tất cả</span>
+        <span class="tag teal">Cơm</span>
+        <span class="tag amber">Trà sữa</span>
+        <span class="tag">Bún phở</span>
+      </div>
+
+      <div class="card">
+        <div class="row" style="gap:12px;">
+          <div class="icon-chip coral"><i data-lucide="utensils" style="width:22px;height:22px;color:var(--coral-dark);"></i></div>
+          <div style="flex:1;">
+            <div class="row between">
+              <h3>Cơm tấm Bà Ba</h3>
+              <span style="color:#FFC259;font-weight:700;font-size:13px;">★ 4.6</span>
+            </div>
+            <p class="meta">Cơm · 30-50k · 350m từ văn phòng</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row" style="gap:12px;">
+          <div class="icon-chip teal"><i data-lucide="cup-soda" style="width:22px;height:22px;color:var(--teal-dark);"></i></div>
+          <div style="flex:1;">
+            <div class="row between">
+              <h3>Gong Cha</h3>
+              <span style="color:#FFC259;font-weight:700;font-size:13px;">★ 4.8</span>
+            </div>
+            <p class="meta">Trà sữa · 40-60k · đặt qua GrabFood</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row" style="gap:12px;">
+          <div class="icon-chip amber"><i data-lucide="soup" style="width:22px;height:22px;color:var(--amber-dark);"></i></div>
+          <div style="flex:1;">
+            <div class="row between">
+              <h3>Bún chả Hàng Quạt</h3>
+              <span style="color:#FFC259;font-weight:700;font-size:13px;">★ 4.3</span>
+            </div>
+            <p class="meta">Bún phở · 35-45k · 500m từ văn phòng</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fab">
+      <i data-lucide="chef-hat" style="width:22px;height:22px;color:#fff;"></i>
+    </div>
+    <div class="navbar">
+      <div class="navitem">
+        <i data-lucide="utensils" style="width:20px;height:20px;"></i>
+        Lời rủ
+      </div>
+      <div class="navitem active">
+        <i data-lucide="map-pin" style="width:20px;height:20px;"></i>
+        Quán
+      </div>
+      <div class="navitem">
+        <i data-lucide="user" style="width:20px;height:20px;"></i>
+        Cá nhân
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<div>
+  <div class="screen-label">MH-USER-002 — Trang cá nhân</div>
+  <div class="phone"><div class="screen" id="MH-USER-002">
+    <div class="hero-top" style="text-align:center;padding-bottom:48px;">
+      <div style="width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,0.22);border:2.5px solid rgba(255,255,255,0.55);display:flex;align-items:center;justify-content:center;margin:0 auto;">
+        <i data-lucide="user-round" style="width:32px;height:32px;color:#fff;"></i>
+      </div>
+      <h3 style="margin-top:10px;color:#fff;font-family:'Baloo 2',sans-serif;font-size:18px;">Huong Le</h3>
+      <p style="color:rgba(255,255,255,0.85);font-size:12.5px;margin:0;">@huongle</p>
+    </div>
+    <div class="content content-lift">
+      <div class="card" style="display:flex;gap:0;padding:0;overflow:hidden;">
+        <div style="flex:1;text-align:center;padding:14px;border-right:1px solid var(--line);">
+          <h3 style="font-size:20px;">12</h3>
+          <p class="meta">Lần đi ăn</p>
+        </div>
+        <div style="flex:1;text-align:center;padding:14px;">
+          <h3 style="font-size:20px;">3</h3>
+          <p class="meta">Quán yêu thích</p>
+        </div>
+      </div>
+
+      <h3 style="margin:16px 0 8px;">Lịch sử gần đây</h3>
+      <div class="card">
+        <div class="row between">
+          <div>
+            <h3 style="font-size:14px;">Gong Cha — order chung</h3>
+            <p class="meta">28/09 · Đã trả 45.000đ</p>
+          </div>
+          <span class="tag teal">Xong</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row between">
+          <div>
+            <h3 style="font-size:14px;">Cơm tấm Bà Ba</h3>
+            <p class="meta">25/09 · Đã trả 40.000đ</p>
+          </div>
+          <span class="tag teal">Xong</span>
+        </div>
+      </div>
+
+      <h3 style="margin:16px 0 8px;">Quán yêu thích</h3>
+      <div class="row" style="gap:8px;flex-wrap:wrap;">
+        <span class="tag">Cơm tấm Bà Ba</span>
+        <span class="tag amber">Gong Cha</span>
+        <span class="tag">Bún chả Hàng Quạt</span>
+      </div>
+    </div>
+    <div class="fab">
+      <i data-lucide="chef-hat" style="width:22px;height:22px;color:#fff;"></i>
+    </div>
+    <div class="navbar">
+      <div class="navitem">
+        <i data-lucide="utensils" style="width:20px;height:20px;"></i>
+        Lời rủ
+      </div>
+      <div class="navitem">
+        <i data-lucide="map-pin" style="width:20px;height:20px;"></i>
+        Quán
+      </div>
+      <div class="navitem active">
+        <i data-lucide="user" style="width:20px;height:20px;"></i>
+        Cá nhân
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<div>
+  <div class="screen-label">MH-SUGGEST-001 — Đầu bếp gợi ý món (chọn khẩu vị)</div>
+  <div class="phone"><div class="screen" id="MH-SUGGEST-001">
+    <div class="topbar">
+      <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+      <div class="brand" style="font-size:16px;">Đầu bếp gợi ý món</div>
+      <span style="width:20px;"></span>
+    </div>
+    <div class="content">
+      <div style="text-align:center;margin-bottom:14px;">
+        <div class="icon-chip coral" style="width:64px;height:64px;border-radius:18px;margin:0 auto;"><i data-lucide="chef-hat" style="width:32px;height:32px;color:var(--coral-dark);"></i></div>
+      </div>
+      <p style="text-align:center;font-weight:700;margin:0 0 16px;">Hôm nay bạn muốn ăn kiểu gì?</p>
+
+      <p class="field-label">1. Món nước hay khô?</p>
+      <div class="type-pill-row">
+        <div class="type-pill active" style="width:auto;padding:10px 16px;">
+          <i data-lucide="soup" style="width:20px;height:20px;"></i><span>Món nước</span>
+        </div>
+        <div class="type-pill" style="width:auto;padding:10px 16px;">
+          <i data-lucide="utensils" style="width:20px;height:20px;"></i><span>Món khô</span>
+        </div>
+      </div>
+
+      <p class="field-label">2. Khẩu vị</p>
+      <div class="type-pill-row">
+        <div class="type-pill" style="width:auto;padding:10px 14px;"><span>Ngọt</span></div>
+        <div class="type-pill active" style="width:auto;padding:10px 14px;"><span>Mặn</span></div>
+        <div class="type-pill" style="width:auto;padding:10px 14px;"><span>Cay</span></div>
+        <div class="type-pill" style="width:auto;padding:10px 14px;"><span>Chua</span></div>
+      </div>
+
+      <p class="field-label">3. Loại nguyên liệu</p>
+      <div class="type-pill-row">
+        <div class="type-pill" style="width:auto;padding:10px 14px;"><span>Thịt</span></div>
+        <div class="type-pill active" style="width:auto;padding:10px 14px;"><span>Hải sản</span></div>
+        <div class="type-pill" style="width:auto;padding:10px 14px;"><span>Chay</span></div>
+        <div class="type-pill" style="width:auto;padding:10px 14px;"><span>Gà</span></div>
+      </div>
+
+      <button class="btn btn-primary" style="margin-top:8px;">Tìm món cho tôi</button>
+    </div>
+  </div></div>
+</div>
+
+<div>
+  <div class="screen-label">MH-SUGGEST-002 — Kết quả gợi ý món</div>
+  <div class="phone"><div class="screen" id="MH-SUGGEST-002">
+    <div class="topbar">
+      <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+      <div class="brand" style="font-size:16px;">Đầu bếp gợi ý cho bạn</div>
+      <span style="width:20px;"></span>
+    </div>
+    <div class="content">
+      <div class="card" style="text-align:center;background:#FFF1EA;border:none;">
+        <p class="meta">Nước · Mặn · Hải sản</p>
+        <h3 style="font-size:18px;">Có 2 món hợp gu bạn nè!</h3>
+      </div>
+
+      <div class="card">
+        <div class="row" style="gap:12px;">
+          <div class="icon-chip coral"><i data-lucide="soup" style="width:20px;height:20px;color:var(--coral-dark);"></i></div>
+          <div style="flex:1;">
+            <h3>Bún riêu cua</h3>
+            <p class="meta">Bún phở · Hải sản · 35-45k</p>
+          </div>
+        </div>
+        <button class="btn btn-outline" style="margin-top:10px;">Rủ mọi người ăn món này</button>
+      </div>
+
+      <div class="card">
+        <div class="row" style="gap:12px;">
+          <div class="icon-chip amber"><i data-lucide="soup" style="width:20px;height:20px;color:var(--amber-dark);"></i></div>
+          <div style="flex:1;">
+            <h3>Lẩu hải sản chua cay</h3>
+            <p class="meta">Lẩu · Hải sản · 60-90k</p>
+          </div>
+        </div>
+        <button class="btn btn-outline" style="margin-top:10px;">Rủ mọi người ăn món này</button>
+      </div>
+
+      <div class="card card-tint-teal">
+        <div class="row between" style="margin-bottom:8px;">
+          <span class="tag teal" style="display:inline-flex;align-items:center;gap:4px;"><i data-lucide="dices" style="width:13px;height:13px;"></i>Random trong nhóm phù hợp</span>
+        </div>
+        <div class="row" style="gap:12px;">
+          <div class="icon-chip teal"><i data-lucide="soup" style="width:20px;height:20px;color:var(--teal-dark);"></i></div>
+          <div style="flex:1;">
+            <h3>Lẩu hải sản chua cay</h3>
+            <p class="meta">Lẩu · Hải sản · 60-90k · chọn ngẫu nhiên từ các quán khớp tiêu chí của bạn</p>
+          </div>
+        </div>
+        <button class="btn btn-teal" style="margin-top:10px;">Rủ mọi người ăn món này</button>
+      </div>
+
+      <button class="btn btn-outline">Random lại (vẫn đúng tiêu chí)</button>
+      <button class="btn btn-teal" style="margin-top:10px;">Đổi tiêu chí khác</button>
+    </div>
+  </div></div>
+</div>
+
+</div>
+<script>if(window.lucide){ lucide.createIcons(); }</script>
+</body>
+</html>

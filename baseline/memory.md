@@ -1,0 +1,1 @@
+V1.0.0 | 2026-09-28 | Initial Baseline | Khởi tạo project NomNom - web app nội bộ rủ đồng nghiệp ăn trưa/tối/trà sữa/cà phê, gợi ý quán, tham gia lời rủ, tổng hợp chi phí sau khi order chung. MVP: HTML/CSS/JS thuần, data JSON seed + localStorage, chạy local, không phân quyền. | EVENT, PLACE, USER
